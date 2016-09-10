@@ -14,7 +14,7 @@ export class HomePage {
   pushPages(i) {
     let pagesToPush = []
     for(let x=0;x<=i;x++) {
-      pagesToPush.push({page: ContactPage})
+      pagesToPush.push({page: ContactPage, params:{pageNumber: x}})
     }
 
     this.navCtrl.insertPages(this.navCtrl.length(), pagesToPush);
