@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {Platform, ionicBootstrap} from 'ionic-angular';
-import {StatusBar} from 'ionic-native';
+import {Component, ViewChild} from '@angular/core';
+import {Platform, ionicBootstrap, Nav} from 'ionic-angular';
+import {StatusBar, Deeplinks} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
 
 
@@ -10,6 +10,7 @@ import {TabsPage} from './pages/tabs/tabs';
 export class MyApp {
 
   private rootPage: any;
+  @ViewChild(Nav) navChild: Nav;
 
   constructor(private platform: Platform) {
     this.rootPage = TabsPage;
@@ -20,6 +21,24 @@ export class MyApp {
       StatusBar.styleDefault();
     });
   }
+
+  ngAfterViewInit() {
+  this.platform.ready().then(() => {
+
+    // Convenience to route with a given nav
+    Deeplinks.routeWithNavController(this.navChild, {
+      '/reset/:token': TabsPage
+    }).subscribe((match) => {
+      console.log('Successfully routed', match);
+    }, (nomatch) => {
+      console.warn('Unmatched Route', Object.keys(nomatch.$link)[3]);
+
+      console.warn('Unmatched Route', nomatch.$link.url);
+      console.warn('Unmatched Route', nomatch.$link.path);
+      console.warn('Unmatched Route', nomatch.$link.schema);
+    }, () => console.log('DOne'));
+  });
+}
 }
 
 ionicBootstrap(MyApp);
